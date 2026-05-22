@@ -1,0 +1,122 @@
+# --- Environnement & secrets ---
+.env
+.env.local
+.env.*.local
+*.secret
+*.pem
+*.key
+credentials.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Environnements virtuels ---
+.venv/
+venv/
+ENV/
+env/
+.virtualenv/
+
+# --- Tests & couverture ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# --- IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# --- Données (jamais committer les datasets volumineux) ---
+data/raw/
+data/bronze/
+data/silver/
+data/gold/
+data/*.csv
+data/*.json
+data/*.parquet
+data/*.sqlite
+data/*.db
+!data/README.md
+!data/.gitkeep
+
+# --- Spark ---
+metastore_db/
+derby.log
+spark-warehouse/
+*.crc
+_SUCCESS
+.spark-checkpoints/
+
+# --- Hive ---
+warehouse/
+
+# --- Docker ---
+.docker/
+docker-compose.override.yml
+
+# --- Logs ---
+*.log
+logs/
+log/
+
+# --- Artefacts ML ---
+mlruns/
+mlartifacts/
+*.pkl
+*.joblib
+models/*.tar
+models/*.zip
+!models/.gitkeep
+
+# --- OS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# --- Divers ---
+*.tmp
+*.bak
+*.backup
+node_modules/
