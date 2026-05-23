@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 20px; font-weight: 600; fill: #1a1a1a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 12px; fill: #666; }
+      .table-name { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #fff; }
+      .col-name { font-family: 'Courier New', monospace; font-size: 11px; fill: #1a1a1a; }
+      .col-type { font-family: 'Courier New', monospace; font-size: 10px; fill: #666; }
+      .pk { font-weight: 700; fill: #B7791F; }
+      .fk { font-style: italic; fill: #2B6CB0; }
+      .link { stroke: #555; stroke-width: 1.2; fill: none; }
+      .link-label { font-family: Arial, sans-serif; font-size: 10px; fill: #555; }
+    </style>
+  </defs>
+
+  <text x="500" y="30" class="title" text-anchor="middle">MLD / MPD — FinSecure Banking (Oracle XE)</text>
+  <text x="500" y="50" class="subtitle" text-anchor="middle">9 tables en 3NF — PK en orange gras, FK en bleu italique</text>
+
+  <!-- CLIENT -->
+  <rect x="30" y="80" width="200" height="20" fill="#3182CE" rx="4 4 0 0"/>
+  <text x="130" y="95" class="table-name" text-anchor="middle">CLIENT</text>
+  <rect x="30" y="100" width="200" height="180" fill="#EBF8FF" stroke="#3182CE" stroke-width="0.8"/>
+  <text x="38" y="118" class="col-name pk">id_client</text>
+  <text x="225" y="118" class="col-type" text-anchor="end">NUMBER(10)</text>
+  <text x="38" y="135" class="col-name">current_age</text>
+  <text x="225" y="135" class="col-type" text-anchor="end">NUMBER(3)</text>
+  <text x="38" y="152" class="col-name">birth_year</text>
+  <text x="225" y="152" class="col-type" text-anchor="end">NUMBER(4)</text>
+  <text x="38" y="169" class="col-name">gender</text>
+  <text x="225" y="169" class="col-type" text-anchor="end">VARCHAR2(10)</text>
+  <text x="38" y="186" class="col-name">address</text>
+  <text x="225" y="186" class="col-type" text-anchor="end">VARCHAR2(255)</text>
+  <text x="38" y="203" class="col-name">yearly_income</text>
+  <text x="225" y="203" class="col-type" text-anchor="end">NUMBER(12,2)</text>
+  <text x="38" y="220" class="col-name">total_debt</text>
+  <text x="225" y="220" class="col-type" text-anchor="end">NUMBER(12,2)</text>
+  <text x="38" y="237" class="col-name">credit_score</text>
+  <text x="225" y="237" class="col-type" text-anchor="end">NUMBER(4)</text>
+  <text x="38" y="254" class="col-name">num_credit_cards</text>
+  <text x="225" y="254" class="col-type" text-anchor="end">NUMBER(3)</text>
+  <text x="38" y="271" class="col-name">date_creation</text>
+  <text x="225" y="271" class="col-type" text-anchor="end">TIMESTAMP</text>
+
+  <!-- CARTE -->
+  <rect x="290" y="80" width="200" height="20" fill="#3182CE" rx="4 4 0 0"/>
+  <text x="390" y="95" class="table-name" text-anchor="middle">CARTE</text>
+  <rect x="290" y="100" width="200" height="215" fill="#EBF8FF" stroke="#3182CE" stroke-width="0.8"/>
+  <text x="298" y="118" class="col-name pk">id_carte</text>
+  <text x="485" y="118" class="col-type" text-anchor="end">NUMBER(10)</text>
+  <text x="298" y="135" class="col-name fk">id_client</text>
+  <text x="485" y="135" class="col-type" text-anchor="end">NUMBER(10)</text>
+  <text x="298" y="152" class="col-name">card_brand</text>
+  <text x="485" y="152" class="col-type" text-anchor="end">VARCHAR2(20)</text>
+  <text x="298" y="169" class="col-name">card_type</text>
+  <text x="485" y="169" class="col-type" text-anchor="end">VARCHAR2(20)</text>
+  <text x="298" y="186" class="col-name">card_number_enc</text>
+  <text x="485" y="186" class="col-type" text-anchor="end">VARCHAR2(255)</text>
+  <text x="298" y="203" class="col-name">expires</text>
+  <text x="485" y="203" class="col-type" text-anchor="end">VARCHAR2(7)</text>
+  <text x="298" y="220" class="col-name">cvv_enc</text>
+  <text x="485" y="220" class="col-type" text-anchor="end">VARCHAR2(255)</text>
+  <text x="298" y="237" class="col-name">has_chip</text>
+  <text x="485" y="237" class="col-type" text-anchor="end">CHAR(1)</text>
+  <text x="298" y="254" class="col-name">credit_limit</text>
+  <text x="485" y="254" class="col-type" text-anchor="end">NUMBER(12,2)</text>
+  <text x="298" y="271" class="col-name">acct_open_date</text>
+  <text x="485" y="271" class="col-type" text-anchor="end">DATE</text>
+  <text x="298" y="288" class="col-name">card_on_dark_web</text>
+  <text x="485" y="288" class="col-type" text-anchor="end">CHAR(1)</text>
+  <text x="298" y="305" class="col-name">date_creation</text>
+  <text x="485" y="305" class="col-type" text-anchor="end">TIMESTAMP</text>
+
+  <!-- TRANSACTION (central) -->
+  <rect x="550" y="80" width="220" height="20" fill="#D69E2E" rx="4 4 0 0"/>
+  <text x="660" y="95" class="table-name" text-anchor="middle">TRANSACTION (partitionnée)</text>
+  <rect x="550" y="100" width="220" height="180" fill="#FFFAF0" stroke="#D69E2E" stroke-width="0.8"/>
+  <text x="558" y="118" class="col-name pk">id_transaction</text>
+  <text x="765" y="118" class="col-type" text-anchor="end">NUMBER(12)</text>
+  <text x="558" y="135" class="col-name fk">id_carte</text>
+  <text x="765" y="135" class="col-type" text-anchor="end">NUMBER(10)</text>
+  <text x="558" y="152" class="col-name fk">id_marchand</text>
+  <text x="765" y="152" class="col-type" text-anchor="end">NUMBER(10)</text>
+  <text x="558" y="169" class="col-name">date_transaction</text>
+  <text x="765" y="169" class="col-type" text-anchor="end">TIMESTAMP</text>
+  <text x="558" y="186" class="col-name">amount</text>
+  <text x="765" y="186" class="col-type" text-anchor="end">NUMBER(12,2)</text>
+  <text x="558" y="203" class="col-name">use_chip</text>
+  <text x="765" y="203" class="col-type" text-anchor="end">VARCHAR2(30)</text>
+  <text x="558" y="220" class="col-name">situation_date</text>
+  <text x="765" y="220" class="col-type" text-anchor="end">DATE</text>
+  <text x="558" y="237" class="col-name">date_creation</text>
+  <text x="765" y="237" class="col-type" text-anchor="end">TIMESTAMP</text>
+  <text x="558" y="265" class="subtitle" fill="#D69E2E" font-style="italic">PARTITION BY RANGE (situation_date)</text>
+
+  <!-- MARCHAND -->
+  <rect x="830" y="80" width="150" height="20" fill="#2F855A" rx="4 4 0 0"/>
+  <text x="905" y="95" class="table-name" text-anchor="middle">MARCHAND</text>
+  <rect x="830" y="100" width="150" height="120" fill="#F0FFF4" stroke="#2F855A" stroke-width="0.8"/>
+  <text x="838" y="118" class="col-name pk">id_marchand</text>
+  <text x="975" y="118" class="col-type" text-anchor="end">NUMBER(10)</text>
+  <text x="838" y="135" class="col-name fk">code_mcc</text>
+  <text x="975" y="135" class="col-type" text-anchor="end">NUMBER(4)</text>
+  <text x="838" y="152" class="col-name">merchant_city</text>
+  <text x="975" y="152" class="col-type" text-anchor="end">VARCHAR2(100)</text>
+  <text x="838" y="169" class="col-name">merchant_state</text>
+  <text x="975" y="169" class="col-type" text-anchor="end">VARCHAR2(50)</text>
+  <text x="838" y="186" class="col-name">zip</text>
+  <text x="975" y="186" class="col-type" text-anchor="end">VARCHAR2(10)</text>
+  <text x="838" y="207" class="col-type" fill="#2F855A" font-style="italic">déduit par DISTINCT</text>
+
+  <!-- MCC -->
+  <rect x="830" y="260" width="150" height="20" fill="#2F855A" rx="4 4 0 0"/>
+  <text x="905" y="275" class="table-name" text-anchor="middle">MCC</text>
+  <rect x="830" y="280" width="150" height="55" fill="#F0FFF4" stroke="#2F855A" stroke-width="0.8"/>
+  <text x="838" y="298" class="col-name pk">code_mcc</text>
+  <text x="975" y="298" class="col-type" text-anchor="end">NUMBER(4)</text>
+  <text x="838" y="315" class="col-name">libelle_mcc</text>
+  <text x="975" y="315" class="col-type" text-anchor="end">VARCHAR2(255)</text>
+
+  <!-- LABEL_FRAUDE -->
+  <rect x="290" y="380" width="200" height="20" fill="#C53030" rx="4 4 0 0"/>
+  <text x="390" y="395" class="table-name" text-anchor="middle">LABEL_FRAUDE</text>
+  <rect x="290" y="400" width="200" height="55" fill="#FFF5F5" stroke="#C53030" stroke-width="0.8"/>
+  <text x="298" y="418" class="col-name pk fk">id_transaction</text>
+  <text x="485" y="418" class="col-type" text-anchor="end">NUMBER(12)</text>
+  <text x="298" y="435" class="col-name">is_fraud</text>
+  <text x="485" y="435" class="col-type" text-anchor="end">CHAR(1)</text>
+
+  <!-- ERREUR_TRANSACTION -->
+  <rect x="550" y="380" width="220" height="20" fill="#C53030" rx="4 4 0 0"/>
+  <text x="660" y="395" class="table-name" text-anchor="middle">ERREUR_TRANSACTION</text>
+  <rect x="550" y="400" width="220" height="80" fill="#FFF5F5" stroke="#C53030" stroke-width="0.8"/>
+  <text x="558" y="418" class="col-name pk">id_erreur</text>
+  <text x="765" y="418" class="col-type" text-anchor="end">NUMBER(12)</text>
+  <text x="558" y="435" class="col-name fk">id_transaction</text>
+  <text x="765" y="435" class="col-type" text-anchor="end">NUMBER(12)</text>
+  <text x="558" y="452" class="col-name">code_erreur</text>
+  <text x="765" y="452" class="col-type" text-anchor="end">VARCHAR2(100)</text>
+
+  <!-- UTILISATEUR_SI -->
+  <rect x="30" y="500" width="200" height="20" fill="#6B46C1" rx="4 4 0 0"/>
+  <text x="130" y="515" class="table-name" text-anchor="middle">UTILISATEUR_SI</text>
+  <rect x="30" y="520" width="200" height="95" fill="#FAF5FF" stroke="#6B46C1" stroke-width="0.8"/>
+  <text x="38" y="538" class="col-name pk">id_utilisateur</text>
+  <text x="225" y="538" class="col-type" text-anchor="end">NUMBER(8)</text>
+  <text x="38" y="555" class="col-name">login</text>
+  <text x="225" y="555" class="col-type" text-anchor="end">VARCHAR2(50)</text>
+  <text x="38" y="572" class="col-name">role</text>
+  <text x="225" y="572" class="col-type" text-anchor="end">VARCHAR2(30)</text>
+  <text x="38" y="589" class="col-name">email</text>
+  <text x="225" y="589" class="col-type" text-anchor="end">VARCHAR2(150)</text>
+  <text x="38" y="606" class="col-name">actif</text>
+  <text x="225" y="606" class="col-type" text-anchor="end">CHAR(1)</text>
+
+  <!-- JOURNAL_AUDIT -->
+  <rect x="290" y="500" width="200" height="20" fill="#6B46C1" rx="4 4 0 0"/>
+  <text x="390" y="515" class="table-name" text-anchor="middle">JOURNAL_AUDIT</text>
+  <rect x="290" y="520" width="200" height="130" fill="#FAF5FF" stroke="#6B46C1" stroke-width="0.8"/>
+  <text x="298" y="538" class="col-name pk">id_audit</text>
+  <text x="485" y="538" class="col-type" text-anchor="end">NUMBER(15)</text>
+  <text x="298" y="555" class="col-name fk">id_utilisateur</text>
+  <text x="485" y="555" class="col-type" text-anchor="end">NUMBER(8)</text>
+  <text x="298" y="572" class="col-name">table_concernee</text>
+  <text x="485" y="572" class="col-type" text-anchor="end">VARCHAR2(50)</text>
+  <text x="298" y="589" class="col-name">id_ligne_concernee</text>
+  <text x="485" y="589" class="col-type" text-anchor="end">NUMBER(12)</text>
+  <text x="298" y="606" class="col-name">operation</text>
+  <text x="485" y="606" class="col-type" text-anchor="end">VARCHAR2(10)</text>
+  <text x="298" y="623" class="col-name">date_operation</text>
+  <text x="485" y="623" class="col-type" text-anchor="end">TIMESTAMP</text>
+  <text x="298" y="640" class="col-name">valeur_avant/apres</text>
+  <text x="485" y="640" class="col-type" text-anchor="end">CLOB</text>
+
+  <!-- Liens : CLIENT -> CARTE -->
+  <path d="M 230 180 L 290 180" class="link"/>
+  <text x="260" y="175" class="link-label" text-anchor="middle">1,n — 1,1</text>
+
+  <!-- Liens : CARTE -> TRANSACTION -->
+  <path d="M 490 165 L 550 165" class="link"/>
+  <text x="520" y="160" class="link-label" text-anchor="middle">1,n — 1,1</text>
+
+  <!-- Liens : MARCHAND -> TRANSACTION -->
+  <path d="M 830 150 L 770 165" class="link"/>
+  <text x="800" y="140" class="link-label" text-anchor="middle">1,n — 1,1</text>
+
+  <!-- Liens : MCC -> MARCHAND -->
+  <path d="M 905 280 L 905 220" class="link"/>
+  <text x="935" y="255" class="link-label" text-anchor="middle">1,n — 1,1</text>
+
+  <!-- Liens : TRANSACTION -> LABEL_FRAUDE -->
+  <path d="M 600 280 L 420 400" class="link"/>
+  <text x="490" y="350" class="link-label" text-anchor="middle">1,1 — 0,1</text>
+
+  <!-- Liens : TRANSACTION -> ERREUR_TRANSACTION -->
+  <path d="M 700 280 L 700 400" class="link"/>
+  <text x="730" y="345" class="link-label" text-anchor="middle">1,n — 0,n</text>
+
+  <!-- Liens : UTILISATEUR_SI -> JOURNAL_AUDIT -->
+  <path d="M 230 570 L 290 570" class="link"/>
+  <text x="260" y="565" class="link-label" text-anchor="middle">1,n — 1,1</text>
+</svg>
