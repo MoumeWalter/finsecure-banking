@@ -78,10 +78,41 @@ def yn(value) -> str:
     """Convertit 'YES'/'NO' (CSV) vers 'Y'/'N' (CHAR(1) Oracle)."""
     if value is None or pd.isna(value):
         return "N"
-    s = str(value).strip().upper()
-    if s in ("YES", "Y", "TRUE", "1"):
+    val = str(value).strip().upper()
+    if val in ("YES", "Y", "TRUE", "1"):
         return "Y"
     return "N"
+
+
+def s(value) -> Optional[str]:
+    """Convertit en string Oracle-compatible, gere NaN/None.
+
+    Pandas renvoie float('nan') pour les cellules vides. oracledb refuse
+    d'inserer un float dans une colonne VARCHAR2. Cette fonction normalise.
+    """
+    if value is None:
+        return None
+    try:
+        if pd.isna(value):
+            return None
+    except (TypeError, ValueError):
+        pass
+    result = str(value).strip()
+    return result if result else None
+
+
+def i(value) -> Optional[int]:
+    """Convertit en int ou None pour NaN/None."""
+    if value is None or pd.isna(value):
+        return None
+    return int(value)
+
+
+def f(value) -> Optional[float]:
+    """Convertit en float ou None pour NaN/None."""
+    if value is None or pd.isna(value):
+        return None
+    return float(value)
 
 
 def batch_insert(
@@ -147,17 +178,17 @@ def load_clients(conn: oracledb.Connection) -> int:
         rows.append((
             int(r["id"]),
             int(r["current_age"]),
-            int(r["retirement_age"]) if not pd.isna(r["retirement_age"]) else None,
+            i(r["retirement_age"]),
             int(r["birth_year"]),
-            int(r["birth_month"]) if not pd.isna(r["birth_month"]) else None,
-            r.get("gender"),
-            encrypt(r.get("address")),
-            float(r["latitude"]) if not pd.isna(r["latitude"]) else None,
-            float(r["longitude"]) if not pd.isna(r["longitude"]) else None,
-            encrypt_optional(r.get("per_capita_income")),
-            encrypt_optional(r.get("yearly_income")),
-            encrypt_optional(r.get("total_debt")),
-            int(r["credit_score"]) if not pd.isna(r["credit_score"]) else None,
+            i(r["birth_month"]),
+            s(r["gender"]),
+            encrypt(s(r["address"])),
+            f(r["latitude"]),
+            f(r["longitude"]),
+            encrypt_optional(s(r["per_capita_income"])),
+            encrypt_optional(s(r["yearly_income"])),
+            encrypt_optional(s(r["total_debt"])),
+            i(r["credit_score"]),
             int(r["num_credit_cards"]),
         ))
     n = batch_insert(conn, sql, rows)
@@ -196,16 +227,16 @@ def load_cards(conn: oracledb.Connection) -> int:
         rows.append((
             int(r["id"]),
             int(r["client_id"]),
-            r["card_brand"],
-            r["card_type"],
+            s(r["card_brand"]),
+            s(r["card_type"]),
             encrypt(str(r["card_number"])),
-            r["expires"],
+            s(r["expires"]),
             encrypt(str(r["cvv"])),
             yn(r.get("has_chip")),
-            int(r["num_cards_issued"]) if not pd.isna(r["num_cards_issued"]) else None,
+            i(r["num_cards_issued"]),
             credit_lim,
             open_date,
-            int(r["year_pin_last_changed"]) if not pd.isna(r["year_pin_last_changed"]) else None,
+            i(r["year_pin_last_changed"]),
             yn(r.get("card_on_dark_web")),
         ))
     n = batch_insert(conn, sql, rows)
@@ -233,9 +264,9 @@ def load_marchands(conn: oracledb.Connection) -> int:
             if mid not in seen:
                 seen[mid] = {
                     "code_mcc": int(r["mcc"]),
-                    "merchant_city": r.get("merchant_city"),
-                    "merchant_state": r.get("merchant_state"),
-                    "zip": str(r["zip"]) if not pd.isna(r["zip"]) else None,
+                    "merchant_city": s(r["merchant_city"]),
+                    "merchant_state": s(r["merchant_state"]),
+                    "zip": s(r["zip"]),
                 }
 
     sql = """
@@ -282,7 +313,7 @@ def load_transactions(conn: oracledb.Connection, situation_date: str | None = No
                 int(r["merchant_id"]),
                 str(r["date"]),
                 amt,
-                r.get("use_chip"),
+                s(r["use_chip"]),
                 situation_date,
             ))
         total += batch_insert(conn, sql, rows)
