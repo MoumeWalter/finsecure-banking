@@ -3,3 +3,4 @@ pandas>=2.2.0
 tqdm>=4.66.0
 cryptography>=42.0.0
 python-dotenv>=1.0.0
+pymongo>=4.6.0
