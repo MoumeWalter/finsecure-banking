@@ -95,7 +95,7 @@ for script in 02_sequences 03_tables 04_indexes 05_views 06_materialized_views 0
 done
 ```
 
-### Étape 5 — Bootstrap des comptes (essentiel)
+### Étape 5 — Bootstrap des comptes
 
 Le trigger d'audit nécessite un compte SYSTEM préexistant :
 
