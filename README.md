@@ -313,8 +313,3 @@ Voir [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ## Licence
 
 MIT — Voir [`LICENSE`](LICENSE).
-
-## Contact
-
-**Walter Moume**
-Repository : https://github.com/MoumeWalter/finsecure-banking
