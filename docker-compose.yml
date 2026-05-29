@@ -1,0 +1,138 @@
+# =============================================================================
+# docker-compose.yml — FinSecure Banking
+# =============================================================================
+# Services : Oracle XE + MongoDB + Mongo Express.
+#
+# Oracle utilise l'image finsecure/oracle-backup:latest qui contient toutes
+# les donnees deja migrees (13 305 915 transactions). Cette image a ete
+# produite par `docker commit` du conteneur Oracle original. C'est le pattern
+# "container as artifact" : la base est livree avec ses donnees.
+# Note : si l'image n'existe pas en local, voir docs/phase5_docker_compose.md
+# pour la procedure de regeneration.
+#
+# MongoDB utilise un volume nomme persistant.
+#
+# Demarrer la stack :
+#   docker compose up -d
+#
+# Voir l'etat :
+#   docker compose ps
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Oracle XE 21c — Base relationnelle (source de verite metier)
+  # ---------------------------------------------------------------------------
+  # Image personnalisee finsecure/oracle-backup contenant les 13,3 M
+  # transactions deja migrees. Pas de volume monte sur oradata (les donnees
+  # sont dans l'image elle-meme). Pour reconstruire depuis zero, voir le
+  # README et la procedure de migration complete.
+  # ---------------------------------------------------------------------------
+  oracle_db:
+    image: finsecure/oracle-backup:latest
+    container_name: oracle_db
+    hostname: oracledb
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    environment:
+      ORACLE_PWD: ${ORACLE_SYS_PASSWORD:-password123}
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          echo "SELECT 1 FROM dual;" | sqlplus -s sys/${ORACLE_SYS_PASSWORD:-password123}@//localhost:1521/XEPDB1 as sysdba 2>/dev/null | grep -q '^[[:space:]]*1$$' || exit 1
+      interval: 30s
+      timeout: 15s
+      retries: 20
+      start_period: 180s
+    restart: unless-stopped
+    networks:
+      - finsecure_net
+    labels:
+      - "finsecure.role=database"
+      - "finsecure.type=oltp"
+
+  # ---------------------------------------------------------------------------
+  # MongoDB 7.0 — Documents enrichis pour analytique et ML
+  # ---------------------------------------------------------------------------
+  mongo_db:
+    image: mongo:7.0
+    container_name: mongo_db
+    hostname: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-ChangeMeMongo2026}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-finsecure}
+    volumes:
+      - finsecure_mongo_data:/data/db
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "db.runCommand({ping:1}).ok"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - finsecure_net
+    labels:
+      - "finsecure.role=database"
+      - "finsecure.type=document"
+
+  # ---------------------------------------------------------------------------
+  # Mongo Express — GUI web pour MongoDB (lecture seule)
+  # ---------------------------------------------------------------------------
+  # http://localhost:8081 — login : admin / ${MONGO_EXPRESS_PASSWORD}
+  # ---------------------------------------------------------------------------
+  mongo_express:
+    image: mongo-express:1.0.2
+    container_name: mongo_express
+    hostname: mongoexpress
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER:-admin}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD:-ChangeMeMongo2026}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-ChangeMeMongo2026}@mongo_db:27017/
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD:-ChangeMeExpress2026}
+      ME_CONFIG_OPTIONS_READONLY: "true"
+      ME_CONFIG_SITE_BASEURL: /
+      ME_CONFIG_SITE_COOKIESECRET: cookiesecret
+      ME_CONFIG_SITE_SESSIONSECRET: sessionsecret
+    depends_on:
+      mongo_db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - finsecure_net
+    labels:
+      - "finsecure.role=gui"
+      - "finsecure.type=mongo-express"
+
+# =============================================================================
+# Volumes
+# =============================================================================
+# Seul MongoDB a un volume nomme : ses donnees sont dans /data/db (volume).
+# Oracle n'a pas de volume monte : les donnees sont dans l'image backup.
+# =============================================================================
+volumes:
+  finsecure_mongo_data:
+    external: true
+
+# =============================================================================
+# Reseau Docker dedie
+# =============================================================================
+networks:
+  finsecure_net:
+    driver: bridge
+    name: finsecure_net
+    external: true
