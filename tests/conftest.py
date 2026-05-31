@@ -15,7 +15,6 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
-
 # Configuration des variables d'environnement pour les tests
 # (avant l'import de l'app FastAPI, pour que get_settings() prenne les bonnes valeurs)
 os.environ.setdefault("MONGO_HOST", "localhost")

@@ -24,7 +24,7 @@ from typing import Iterator
 
 import oracledb
 from dotenv import load_dotenv
-from pymongo import MongoClient, ASCENDING, DESCENDING
+from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 from tqdm import tqdm
 

@@ -8,8 +8,8 @@ from pydantic import ValidationError
 from src.api.models import (
     CarteEmbedded,
     ClientEmbedded,
-    FraudStats,
     FraudeEmbedded,
+    FraudStats,
     HealthCheck,
     MarchandEmbedded,
     McEmbedded,
