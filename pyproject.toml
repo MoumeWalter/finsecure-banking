@@ -1,0 +1,66 @@
+[project]
+name = "finsecure-banking"
+version = "0.1.0"
+description = "Plateforme data bancaire - projet RNCP36739"
+requires-python = ">=3.11"
+authors = [{ name = "Walter Moume" }]
+
+# =============================================================================
+# Pytest
+# =============================================================================
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Mode asyncio automatique : pas besoin de decorer chaque test
+asyncio_mode = "auto"
+
+# Markers personnalises (eviter les warnings PytestUnknownMarkWarning)
+markers = [
+    "unit: tests unitaires rapides, sans dependance externe",
+    "integration: tests necessitant MongoDB sur localhost:27017",
+    "slow: tests lents (plus de 1 seconde)",
+]
+
+# Affichage
+addopts = [
+    "--strict-markers",     # rejette les markers non declares
+    "--tb=short",           # tracebacks compacts
+    "-ra",                  # resume des tests skipped/failed en fin
+    "--color=yes",
+]
+
+# =============================================================================
+# Coverage
+# =============================================================================
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "tests/*",
+    "*/__init__.py",
+    "src/migration/load_oracle.py",  # script CLI, teste manuellement
+    "src/migration/load_mongo.py",   # script CLI, teste manuellement
+]
+branch = true
+
+[tool.coverage.report]
+# Affichage
+show_missing = true
+skip_covered = false
+precision = 1
+
+# Pas de seuil bloquant (choix assume : la couverture est un indicateur, pas un gate)
+# fail_under = 0
+
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
