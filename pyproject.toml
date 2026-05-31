@@ -64,3 +64,41 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+# =============================================================================
+# Ruff (linter + formatter)
+# =============================================================================
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [
+    ".venv",
+    "htmlcov",
+    "data",
+    "_oradata_tmp",
+    "_dbs_tmp",
+]
+
+[tool.ruff.lint]
+# Regles activees : un sous-ensemble pragmatique
+# E/W = pycodestyle, F = pyflakes, I = isort, B = bugbear, UP = pyupgrade
+select = ["E", "W", "F", "I", "B"]
+ignore = [
+    "E501",  # line too long - on laisse passer (au pire formatteur ralera)
+    "B008",  # ne pas utiliser d'appel de fonction dans les defaults (FastAPI Depends incompatible)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests : on autorise les __init__.py vides et les imports non triés
+"tests/*" = ["F401", "F811", "B017"]
+"**/__init__.py" = ["F401"]
+# Scripts de migration : code legacy fonctionnel, on tolere les imports manquants
+# (Optional non importe, zip sans strict). Sera nettoye en V2.
+"src/migration/load_oracle.py" = ["F821"]
+"src/migration/load_mongo.py" = ["B905"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
