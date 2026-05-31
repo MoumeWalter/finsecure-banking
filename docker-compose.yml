@@ -118,6 +118,41 @@ services:
       - "finsecure.role=gui"
       - "finsecure.type=mongo-express"
 
+  # ---------------------------------------------------------------------------
+  # FinSecure API — FastAPI exposant les datamarts MongoDB
+  # ---------------------------------------------------------------------------
+  # http://localhost:8000          → page d'accueil
+  # http://localhost:8000/docs     → Swagger UI
+  # http://localhost:8000/health   → healthcheck
+  # ---------------------------------------------------------------------------
+  finsecure_api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: finsecure/api:0.1.0
+    container_name: finsecure_api
+    hostname: finsecureapi
+    ports:
+      - "8000:8000"
+    environment:
+      # Pointe sur MongoDB via le reseau Docker (hostname = nom du service)
+      MONGO_HOST: mongo_db
+      MONGO_PORT: 27017
+      MONGO_USER: ${MONGO_USER:-admin}
+      MONGO_PASSWORD: ${MONGO_PASSWORD:-ChangeMeMongo2026}
+      MONGO_DATABASE: ${MONGO_DATABASE:-finsecure}
+      MONGO_COLLECTION: transactions_enriched
+      DEBUG: "false"
+    depends_on:
+      mongo_db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - finsecure_net
+    labels:
+      - "finsecure.role=api"
+      - "finsecure.type=fastapi"
+
 # =============================================================================
 # Volumes
 # =============================================================================

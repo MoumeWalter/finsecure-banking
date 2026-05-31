@@ -1,0 +1,50 @@
+# =============================================================================
+# Dockerfile.api - Image FastAPI pour FinSecure Banking
+# =============================================================================
+# Image Python 3.12 slim, uvicorn comme serveur ASGI.
+#
+# Build :
+#   docker build -f Dockerfile.api -t finsecure/api:0.1.0 .
+#
+# Run (hors compose, pour test isole) :
+#   docker run --rm -p 8000:8000 --network finsecure_net `
+#     -e MONGO_HOST=mongo_db -e MONGO_PASSWORD=ChangeMeMongo2026 `
+#     finsecure/api:0.1.0
+# =============================================================================
+
+FROM python:3.12-slim
+
+# Variables d'environnement Python
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+# Dependances systeme minimales (curl pour healthcheck)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Installation des dependances Python
+COPY requirements-api.txt /app/
+RUN pip install -r requirements-api.txt
+
+# Copie du code source
+COPY src/api /app/src/api
+
+# Utilisateur non-root (securite)
+RUN useradd --create-home --shell /bin/bash apiuser && \
+    chown -R apiuser:apiuser /app
+USER apiuser
+
+# Port expose
+EXPOSE 8000
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl --fail http://localhost:8000/health || exit 1
+
+# Lancement avec uvicorn
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
