@@ -2,6 +2,8 @@
 # Dockerfile.api - Image FastAPI pour FinSecure Banking
 # =============================================================================
 # Image Python 3.12 slim, uvicorn comme serveur ASGI.
+# Inclut le module ML (src/ml) et le modele entraine (models/) pour
+# l'endpoint /api/v1/predict (Phase 10).
 #
 # Build :
 #   docker build -f Dockerfile.api -t finsecure/api:0.1.0 .
@@ -27,12 +29,16 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
-# Installation des dependances Python
+# Installation des dependances Python (inclut sklearn, joblib pour ML inference)
 COPY requirements-api.txt /app/
 RUN pip install -r requirements-api.txt
 
-# Copie du code source
+# Copie du code source : API + module ML (Phase 10)
 COPY src/api /app/src/api
+COPY src/ml /app/src/ml
+
+# Copie du modele entraine + metadata (Phase 10)
+COPY models /app/models
 
 # Utilisateur non-root (securite)
 RUN useradd --create-home --shell /bin/bash apiuser && \

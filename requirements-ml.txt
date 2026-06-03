@@ -1,0 +1,19 @@
+# =============================================================================
+# requirements-ml.txt - Dependances pour l'entrainement et l'inference ML
+# =============================================================================
+# Utilise pour :
+#   1. Entrainement local du modele de detection de fraude (Phase 10)
+#   2. Inference dans l'API FastAPI (le modele est charge au demarrage)
+#
+# Installation :
+#   pip install -r requirements-ml.txt
+# =============================================================================
+
+# Coeur ML
+scikit-learn>=1.5.0,<2.0.0
+joblib>=1.4.0
+numpy>=1.26.0
+pandas>=2.2.0
+
+# Lecture des donnees pour le training
+pymongo>=4.6.0

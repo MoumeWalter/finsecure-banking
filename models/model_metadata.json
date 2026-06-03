@@ -1,0 +1,47 @@
+{
+  "model_version": "1.0.0",
+  "model_type": "RandomForestClassifier",
+  "trained_at": "2026-06-03T09:30:24.423097+00:00",
+  "feature_columns": [
+    "amount",
+    "use_chip",
+    "mcc_code",
+    "merchant_state",
+    "hour",
+    "current_age",
+    "gender"
+  ],
+  "numerical_features": [
+    "amount",
+    "mcc_code",
+    "hour",
+    "current_age"
+  ],
+  "categorical_features": [
+    "use_chip",
+    "merchant_state",
+    "gender"
+  ],
+  "metrics": {
+    "roc_auc": 0.9767212653118693,
+    "precision_fraud": 0.21686746987951808,
+    "recall_fraud": 0.6923076923076923,
+    "f1_fraud": 0.3302752293577982,
+    "n_test": 14777,
+    "n_fraud_test": 26,
+    "confusion_matrix": {
+      "true_negative": 14686,
+      "false_positive": 65,
+      "false_negative": 8,
+      "true_positive": 18
+    }
+  },
+  "hyperparameters": {
+    "n_estimators": 100,
+    "max_depth": 12,
+    "min_samples_split": 10,
+    "min_samples_leaf": 5,
+    "class_weight": "balanced",
+    "random_state": 42
+  }
+}

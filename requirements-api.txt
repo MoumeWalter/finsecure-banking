@@ -1,5 +1,27 @@
+# =============================================================================
+# requirements-api.txt - Dépendances de l'API FastAPI (mise à jour Phase 10)
+# =============================================================================
+# Cette version ajoute scikit-learn et joblib pour permettre à l'API de charger
+# et d'utiliser le modèle ML entraîné (Phase 10).
+#
+# ⚠️ ATTENTION : Si tu as déjà un requirements-api.txt, AJOUTE simplement les
+# 3 dernières lignes (scikit-learn, joblib, pandas) à ton fichier existant
+# au lieu de l'écraser entièrement, pour préserver l'historique des choix.
+# =============================================================================
+
+# FastAPI core
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
-motor>=3.6.0
+
+# Configuration et validation
 pydantic>=2.9.0
 pydantic-settings>=2.6.0
+
+# MongoDB async driver
+motor>=3.6.0
+
+# === Ajouts Phase 10 (ML inference) ===
+scikit-learn>=1.5.0,<2.0.0
+joblib>=1.4.0
+pandas>=2.2.0
+numpy>=1.26.0
